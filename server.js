@@ -3,9 +3,56 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 7860;
+
+// MongoDB Connection
+const MONGODB_URI = 'mongodb+srv://sset232922_db_user:<db_password>@clusterboa.5gi71zg.mongodb.net/?appName=Cluster0';
+
+// MongoDB connection options
+const mongooseOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+};
+
+// Connect to MongoDB
+mongoose.connect(MONGODB_URI, mongooseOptions)
+    .then(() => {
+        console.log('✅ MongoDB connected successfully');
+    })
+    .catch((err) => {
+        console.error('❌ MongoDB connection error:', err.message);
+        console.log('⚠️  Server will continue running with file-based storage as fallback');
+    });
+
+// MongoDB connection event handlers
+mongoose.connection.on('connected', () => {
+    console.log('Mongoose connected to MongoDB Atlas');
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('Mongoose connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('Mongoose disconnected from MongoDB');
+});
+
+// Handle process termination - close MongoDB connection
+process.on('SIGINT', async () => {
+    try {
+        await mongoose.connection.close();
+        console.log('MongoDB connection closed through app termination');
+        process.exit(0);
+    } catch (err) {
+        console.error('Error closing MongoDB connection:', err);
+        process.exit(1);
+    }
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
