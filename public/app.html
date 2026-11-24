@@ -39,16 +39,13 @@
             font-weight: 700;
             letter-spacing: .5px;
         }
-        .header-mark {
+        .header-logo-image {
             width: 20px;
-            height: 14px;
-            overflow: hidden;
-            display: inline-flex;
-            flex-direction: column;
+            height: 20px;
+            display: block;
+            object-fit: contain;
             border-radius: 2px;
         }
-        .header-mark span { flex: 1; background: #c41e3a; }
-        .header-mark span:nth-child(2) { background: #fff; }
         .header-icon {
             color: #333;
             font-size: 20px;
@@ -58,8 +55,10 @@
             min-height: calc(100vh - 60px);
             padding: 28px 18px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 16px;
         }
         .suspended-card {
             width: 100%;
@@ -104,6 +103,21 @@
             font-size: 15px;
             line-height: 1.6;
         }
+        .logout-button {
+            width: 100%;
+            max-width: 384px;
+            padding: 14px 18px;
+            color: #fff;
+            background: #c41e3a;
+            border: 0;
+            border-radius: 8px;
+            font: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .logout-button:hover { background: #a71931; }
+        .logout-button:focus-visible { outline: 3px solid #7f1425; outline-offset: 3px; }
         @media (max-width: 420px) {
             .mobile-container { box-shadow: none; }
         }
@@ -114,8 +128,12 @@
         <header class="header" aria-label="Bank header">
             <div class="header-left" aria-hidden="true">
                 <span class="header-icon">☰</span>
-                <span class="header-logo">Bank</span>
-                <span class="header-mark"><span></span><span></span><span></span></span>
+                <img
+                    class="header-logo-image"
+                    src="https://i.ibb.co/dJpRtmtW/IMG-4194.jpg"
+                    alt=""
+                >
+                <span class="header-logo">Bank Of America</span>
             </div>
             <div class="header-right" aria-hidden="true">
                 <span class="header-icon">✉</span>
@@ -130,7 +148,15 @@
                 <h1 id="status-title">Account suspended</h1>
                 <p class="message">Access to this account is currently suspended.</p>
             </section>
+            <button class="logout-button" type="button" onclick="logout()">Log out</button>
         </main>
     </div>
+    <script>
+        function logout() {
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.assign("login.html");
+        }
+    </script>
 </body>
 </html>
